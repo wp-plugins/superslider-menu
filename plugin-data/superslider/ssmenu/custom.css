@@ -1,0 +1,186 @@
+/* @groupmulti Accordion */
+
+#sidebar h2 { 
+	text-align: center; 
+	border-left: 1px solid #909090;
+	border-right: 2px solid #9d9c5e;
+	border-top: 1px solid #909090;
+	border-bottom: 2px solid #9d9c5e;
+	background: #ffff99; 
+	padding: 6px;
+	color: #61613a;
+	margin: 0px;
+	}
+	
+#ssMenuHolder{
+	position: relative;/* do not change this!*/
+	}
+#ssMenuList
+{
+	border-left: 1px solid #5c5b37;
+	border-right: 2px solid #5c5b37;
+	border-bottom: 2px solid #5c5b37;
+	background-color: #ffff99;
+	margin: 0px;
+	padding-right: 0px;
+}
+/* This is the follower which slides up and down*/
+#navArrow
+{
+	background-image: url(img_custom/nav_arrow.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	right: 0;
+	width: 10px;
+}
+
+/* This is for all links in the menu*/
+#ssMenuList a{
+	color: #302f1c;
+	padding-right: 4px;
+
+}
+/* This is for the toggler bars*/
+#ssMenuList dt, #ssMenuList dd dl dt, #ssMenuList dd dl dd dl dt
+{
+	color:#302f1c;
+	font-size: 1.1em;
+	border-top: 1px solid #e6e2af;
+	background: #ffff99;
+	position: relative;/* do not change this!*/
+	padding: 6px 0 4px 0px;
+	text-transform: uppercase;
+	margin: 0px;
+}
+#ssMenuList dd dl dt { background: #fbff8e; }
+
+#ssMenuList dd {
+	position: relative;/* do not change this!*/
+	overflow: hidden;/* do not change this!*/
+	background: #faffc7;
+	margin: 0px;
+	padding: 0px;
+	}
+
+/* These are for the level indents */
+#ssMenuList dd dl { padding-left: 0px; margin: 0px;}
+
+#ssMenuList dd dl dt{ padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd { padding-left: 0px; margin: 0px; }
+
+#ssMenuList dd dl dd dl dt { padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd { padding-left: 0px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd dl dt { padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd dl dd { padding-left: 0px; margin: 0px;}
+
+/* These are the post links */
+.ssMenuPost { 
+	display: block; /* do not change this!*/
+	padding: 6px 2px 4px 14px; 
+	border-top: 1px solid #e6e2af; 
+	text-transform: capitalize;
+	}
+#ssMenuList .ssMenuPost a {
+	color: #484848;
+	}
+/* these are the post link lists */
+.showme_2 .ssMenuPost { padding: 6px 2px 4px 24px;}
+.showme_3 .ssMenuPost { padding: 6px 2px 4px 34px;}
+.showme_3 .ssMenuPost { padding: 6px 2px 4px 44px;}
+
+/* This is the toggle button */
+#ssMenuList .subsym {cursor: pointer; padding-right: 8px; }
+
+#ssMenuList .catlink { padding-right: 8px; }
+
+#ssMenuList .menuRss { margin-left: 4px; font-size: 8px; padding-right: 0px;}
+
+/* This is the toggle button */
+#ssMenuList .subsym {
+	background-image: url(img_custom/icon_closed_out.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding: 5px 10px ;}
+#ssMenuList .subsym:link {background-image: url(img_custom/icon_closed_out.png);}
+#ssMenuList .subsym:visited {background-image: url(img_custom/icon_closed_out.png);}
+#ssMenuList .subsym:hover {background-image: url(img_custom/icon_closed_over.png);}
+
+/* This is the toggle button when opened */
+#ssMenuList .open {	
+	background-image: url(img_custom/icon_open_out.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding: 5px 10px ;}
+#ssMenuList .open:link {background-image: url(img_custom/icon_open_out.png);}
+#ssMenuList .open:visited {background-image: url(img_custom/icon_open_out.png);}
+#ssMenuList .open:hover {background-image: url(img_custom/icon_open_over.png);}
+
+/* This is the toggle bar when opened - will animate from and to closed */
+.tabopen{ height: 30px; background: #ebdc8c; border-bottom: 3px solid #86894c; border-top: 1px solid #86894c;}
+/* This is the toggle bar when closed */
+.tabclosed{ height: 20px; background: #ffff99; border-bottom: 0px solid #e6e2af; border-top: 1px solid #e6e2af;}
+
+.linkslist{}
+/* This is the active post link */
+#active_nav{
+	background-color: #ebdc8c;
+	border-left: 10px solid #9d9c5e;
+	color: #34341f;
+	text-transform: uppercase;
+}
+/* This is the active toggle bar when opened */
+dt#active_nav {
+	background-color:#3b78ab; 
+	border-left: 0px solid #97d2ff;
+	}
+/* This is the toggle bar link when active */
+#active_nav.catlink{background-color: transparent; border-left: 0px solid #fff;}
+
+/* tootip classes */
+
+.customTip{
+	margin-left:0px;
+	margin-top:0px;
+	width: 280px;
+	overflow: hidden;
+	z-index: 13000;
+}
+.tipClosed{
+	margin-left:-60px;
+	margin-top:-60px;
+	width: 0px;
+	overflow: hidden;
+	z-index: 13000;
+}
+.tip-top {
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_custom/tooltips/tip-top.png) no-repeat scroll 50% 50%;
+}
+ 
+.tip-bottom {
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_custom/tooltips/tip-bottom.png) no-repeat scroll 50% 50%;
+	/*background: red;*/
+}
+.tip {
+	color: #505030;
+	width: 280px;
+	background:transparent url(img_custom/tooltips/tip-text.png) repeat-y scroll 50% 50%;
+}
+.tip-title, .tip-text {
+	font-size: 12px;
+	padding: 2px 30px 3px 10px;
+	text-align: center;
+}
+.tip-title {
+	font-weight: bold;
+	color: #797949;
+	padding-bottom: 6px;
+}
+.tip-text { font-style: italic; }

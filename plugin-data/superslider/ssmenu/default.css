@@ -1,0 +1,146 @@
+/* @groupmulti Accordion */
+
+#sidebar h2 { 
+	text-align: center; 
+	border-bottom: 3px solid #5091c9;
+	padding: 6px;
+	margin: 0px;
+	}
+	
+#ssMenuHolder{
+	position: relative;
+	}
+#ssMenuList
+{
+	margin: 0px;
+	padding-right: 0px;
+}
+#navArrow
+{
+	background-image: url(img_default/nav_arrow.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	right: 0;
+	width: 10px; /* set this to the width of the background image */
+	border-right: 2px solid #5091c9;
+}
+#ssMenuList a{
+	padding-right: 4px;
+
+}
+#ssMenuList dt, #ssMenuList dd dl dt, #ssMenuList dd dl dd dl dt
+{
+	position: relative;
+	padding: 6px 0 4px 0px;
+	margin: 0px;
+}
+#ssMenuList dd dl dt {  }
+
+#ssMenuList dd {
+	position: relative;
+	overflow: hidden;
+	margin: 0px;
+	padding: 0px;
+	}
+	
+#ssMenuList dd dl { padding-left: 0px; margin: 0px;}
+
+#ssMenuList dd dl dt{ padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd { padding-left: 0px; margin: 0px; }
+
+#ssMenuList dd dl dd dl dt { padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd { padding-left: 0px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd dl dt { padding-left: 10px; margin: 0px;}
+
+#ssMenuList dd dl dd dl dd dl dd { padding-left: 0px; margin: 0px;}
+
+.ssMenuPost { 
+	display: block; 
+	padding: 6px 2px 4px 14px; 
+	}
+#ssMenuList .ssMenuPost a {
+	}
+.showme_2 .ssMenuPost { padding: 6px 2px 4px 24px;}
+.showme_3 .ssMenuPost { padding: 6px 2px 4px 34px;}
+
+#ssMenuList .subsym {cursor: pointer; padding-right: 8px; }
+
+#ssMenuList .catlink { padding-right: 8px; }
+
+#ssMenuList .menuRss { margin-left: 4px; font-size: 8px; padding-right: 0px;}
+
+#ssMenuList .subsym {
+	background-image: url(img_default/icon_closed_out.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding: 5px 10px ;}
+#ssMenuList .subsym:link {background-image: url(img_default/icon_closed_out.png);}
+#ssMenuList .subsym:visited {background-image: url(img_default/icon_closed_out.png);}
+#ssMenuList .subsym:hover {background-image: url(img_default/icon_closed_over.png);}
+#ssMenuList .open {	
+	background-image: url(img_default/icon_open_out.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding: 5px 10px ;}
+#ssMenuList .open:link {background-image: url(img_default/icon_open_out.png);}
+#ssMenuList .open:visited {background-image: url(img_default/icon_open_out.png);}
+#ssMenuList .open:hover {background-image: url(img_default/icon_open_over.png);}
+
+.tabopen{ height: 30px; border-bottom: 3px solid #5091c9; border-top: 1px solid #5091c9;}
+.tabclosed{ height: 20px; border-bottom: 0px solid #e6e2af; border-top: 1px solid #e6e2af;}
+
+.linkslist{}
+#active_nav {
+	border-left: 10px solid #fbff8e; 
+	}
+dt#active_nav {
+	border-left: 0px solid #fbff8e;
+	}
+#active_nav.catlink{background-color: transparent; border-left: 0px solid #fff;}
+
+/* tootip classes */
+
+.customTip{
+	margin-left:0px;
+	margin-top:0px;
+	width: 280px;
+	overflow: hidden;
+	z-index: 13000;
+}
+.tipClosed{
+	margin-left:-60px;
+	margin-top:-60px;
+	width: 0px;
+	overflow: hidden;
+	z-index: 13000;
+}
+.tip-top {
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_default/tooltips/tip-top.png) no-repeat scroll 50% 50%;
+}
+ 
+.tip-bottom {
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_default/tooltips/tip-bottom.png) no-repeat scroll 50% 50%;
+}
+.tip {
+	color: #5091c9;
+	width: 280px;
+	background:transparent url(img_default/tooltips/tip-text.png) repeat-y scroll 50% 50%;
+}
+.tip-title, .tip-text {
+	font-size: 12px;
+	padding: 2px 30px 3px 10px;
+	text-align: center;
+}
+.tip-title {
+	font-weight: bold;
+	color: #5091c9;
+	padding-bottom: 6px;
+}
+.tip-text { font-style: italic; }

@@ -1,0 +1,185 @@
+/* @groupmulti Accordion */
+#sidebar h2 { 
+	text-align: center; 
+	border-left: 5px solid #909090;
+	border-right: 2px solid #6fafd8;
+	border-top: 3px solid #909090;
+	border-bottom: 3px solid #6fafd8;
+	background: #000; 
+	padding: 6px;
+	color: #86D0FF;
+	margin: 0px;
+	}
+#ssMenuHolder{
+	position: relative;
+	}
+#ssMenuList {
+	border-left: 1px solid #909090;
+	border-right: 2px solid #909090;
+	border-bottom: 2px solid #909090;
+	background: #000; 
+	margin: 0px;
+	padding-right: 0px;
+	position: relative;
+}
+#navArrow
+{
+	background-image: url(img_black/nav_arrow.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	right: 0;
+	width: 10px;
+}
+#ssMenuList a {color: #86D0FF; padding-right: 2px; }
+
+dl#ssMenuList dt, #ssMenuList dd dl dt, #ssMenuList dd dl dd dl dt {
+	color: #4c4f4c;
+	font-size: 1.1em;
+	font-weight: bold;
+	border-top: 1px solid #838383;
+	background: #2a2a2a;
+	position: relative;
+	padding: 8px 0 4px 0px;
+	text-transform: uppercase;
+	margin: 0px;
+}
+
+dl#ssMenuList dd dl dt { background: #838383; border-top: 1px solid #484848; }
+
+#ssMenuList dd {
+	position: relative;
+	overflow: hidden;
+	background: #acacac;
+	margin: 0px;
+	padding: 0px;
+	}
+	
+#ssMenuList dd dl { padding-left: 0px;}
+
+#ssMenuList dd dl dt{ padding-left: 10px;}
+
+#ssMenuList dd dl dd { padding-left: 0px; margin-left: 0px; }
+
+#ssMenuList dd dl dd dl dt { padding-left: 10px; }
+
+#ssMenuList dd dl dd dl dd { padding-left: 0px; }
+
+#ssMenuList dd dl dd dl dd dl dt { padding-left: 10px; }
+
+#ssMenuList dd dl dd dl dd dl dd { padding-left: 0px; }
+
+.ssMenuPost
+{
+	display: block;
+	padding: 6px 2px 4px 14px;
+	border-top: 1px solid #bdbdbd;
+	border-left: 4px solid #3b3b3b;
+	text-transform: capitalize;
+}
+#ssMenuList .ssMenuPost a {
+	color: #0d0e0d;
+	}
+.showme_2 .ssMenuPost { padding: 6px 2px 4px 24px;}
+.showme_3 .ssMenuPost { padding: 6px 2px 4px 34px;}
+
+#ssMenuList .subsym {cursor: pointer; padding-right: 4px; }
+
+#ssMenuList .catlink { padding-right: 8px; }
+
+#ssMenuList .menuRss { margin-left: 6px; font-size: 8px; padding-right: 0px;}
+
+#ssMenuList .subsym {
+	background-image: url(img_black/icon_closed_out.png);
+	background-repeat: no-repeat;
+	background-position: 4px 100%;
+	padding: 0px 8px ;}
+#ssMenuList .subsym:link {background-image: url(img_black/icon_closed_out.png);}
+#ssMenuList .subsym:visited {background-image: url(img_black/icon_closed_out.png);}
+#ssMenuList .subsym:hover {background-image: url(img_black/icon_closed_over.png);}
+#ssMenuList .open {	
+	background-image: url(img_black/icon_open_out.png);
+	background-repeat: no-repeat;
+	background-position: 4px 100%;
+	padding: 0px 8px ;}
+#ssMenuList .open:link {background-image: url(img_black/icon_open_out.png);}
+#ssMenuList .open:visited {background-image: url(img_black/icon_open_out.png);}
+#ssMenuList .open:hover {background-image: url(img_black/icon_open_over.png);}
+
+.tabopen{ /* this is the destination class for when the toggler is opened */
+	height: 30px; 
+	background: #181818; 
+	border-top: 4px solid #414141;
+	border-left: 12px solid #818682;
+	border-bottom: 4px solid #414141;
+	margin: 0px;
+
+	}
+.tabclosed{ 
+	height: 20px; 
+	background: #2a2a2a; 
+	border-top: 1px solid #bdbdbd;
+	border-left: 0px solid #818682;
+	border-bottom: 0px solid #818682;
+	margin: 0px;
+	
+	}
+.listHolder{ max-height: 160px; overflow: hidden;}
+.linkslist{}
+#active_nav {
+	background-color:#0c0c0c; 
+	border-left: 10px solid #818682; 
+	border-top: 4px solid #5e615e; 
+	border-bottom: 4px solid #5e615e; 
+	color: #fff;
+	}
+dt #active_nav {
+	background-color:#181818; 
+	border-left: 0px solid #353535;
+	border-top: 0px solid #5e615e; 
+	border-bottom: 0px solid #5e615e; 
+	color: #fff;
+	}
+
+/* tootip classes */
+
+.customTip{
+	margin-left:0px;
+	margin-top:0px;
+	width: 280px;
+	overflow: hidden;
+}
+.tipClosed{
+	margin-left:-60px;
+	margin-top:-60px;
+	width: 0px;
+	overflow: hidden;
+}
+.tip-top {
+	color: #fff;
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_black/tooltips/tip-top.png) no-repeat scroll 50% 50%;
+}
+ 
+.tip-bottom {
+	color: #fff;
+	width: 280px;
+	height: 20px;
+	background:transparent url(img_black/tooltips/tip-bottom.png) no-repeat scroll 50% 50%;
+}
+.tip {
+	color: #999;
+	width: 280px;
+	background:transparent url(img_black/tooltips/tip-text.png) repeat-y scroll 50% 50%;
+}
+.tip-title, .tip-text {
+	font-size: 12px;
+	padding: 2px 30px 3px 10px;
+	text-align: center;
+}
+.tip-title {
+	font-weight: bold;
+	color: #fff;
+	padding-bottom: 6px;
+}
+.tip-text { font-style: italic; }
