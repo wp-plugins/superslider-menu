@@ -1,5 +1,5 @@
-=== SuperSlider Menu ===
-Contributors: twincascos
+=== SuperSlider-Menu ===
+Contributors: Daiv Mowbray
 Plugin URI: http://wp-superslider.com/
 Tags: menu, categories, sidebar, widget, mootools
 Requires at least: 2.6
