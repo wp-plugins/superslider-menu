@@ -1,7 +1,9 @@
 <?php
 
 	function ss_menu_widget($args, $widget_args=1) {
+        
 
+	  
 	  extract($args, EXTR_SKIP);
 	  
 	  if ( is_numeric($widget_args) )
@@ -10,6 +12,10 @@
 	  extract($widget_args, EXTR_SKIP);
 	
 	  $options = get_option('ssMenu_widget_options');
+	  
+	  
+	  
+	  
 	  if ( !isset($options[$number]) )
 	    return;
 	
@@ -18,14 +24,15 @@
 	  if ( !empty( $title ) ){ echo $before_widget . $before_title . $title . $after_title;}
 	       
 	    if(method_exists('ssMenu','foldcats')) {
-//echo'about to make a widget';
+
+            ssMenu::$add_ssmenu_script = true;//switch on js loader
 	        ssMenu::foldcats($number);
+	        
 	       } else {
 	        echo "<ul>\n";
 	        wp_list_cats('sort_column=name&optioncount=1&hierarchical=0');
 	        echo "</ul>\n";
-	       }
-	
+	       }	
 	    echo $after_widget;
 	  }
 	
@@ -34,43 +41,35 @@
 		
 		if ( !$options = get_option('ssMenu_widget_options') )
 		    $options = array();
-		  $control_ops = array('width' => 400, 'height' => 400, 'id_base' => 'ss_menu');
+		  $control_ops = array('width' => 380, 'height' => 400, 'id_base' => 'ss_menu');
 			$widget_ops = array('classname' => 'ss_menu', 'description' =>
-		  __('Animated expanding category menu to show subcategories and/or posts'));
+		  __('Animated expanding / fold down category menu to show subcategories and posts'));
 		  $name = __('SuperSlider Menu');
 		  $id = false;
 		  
-		foreach ( array_keys($options) as $o ) 
-		{// Old widgets can have null values for some reason
+		foreach ( array_keys($options) as $o ) {// Old widgets can have null values for some reason
 			if ( !isset($options[$o]['title']) || !isset($options[$o]['title']) )
 	      continue;
 			$id = "ss_menu-$o"; // Never never never translate an id
 			wp_register_sidebar_widget($id, $name, 'ss_menu_widget', $widget_ops, array( 'number' => $o ));
 			wp_register_widget_control($id, $name, 'ss_menu_widgetControl', $control_ops, array( 'number' => $o ));
-	//echo 'register_sidebar_widget is here';
-		}
+            }
 		
 		  // If there are none, we register the widget's existance with a generic template
-		  if ( !$id ) 
-		  {
+		  if ( !$id ) {
 		
 		    wp_register_sidebar_widget('ss_menu-1', $name, 'ss_menu_widget', $widget_ops, array( 'number' => -1 ) );
 		    wp_register_widget_control('ss_menu-1', $name, 'ss_menu_widgetControl', $control_ops, array( 'number' => -1 ) );
 			
-			
-		    //register_sidebar_widget( 'ss_menu-1', 'ss_menu_widget' );
-		    //register_widget_control( 'ss_menu-1', 'ss_menu_widgetControl' );
-
 		  }
-		
+
 	}
 
 	// Run our code later in case this loads prior to any required plugins.
 	if (method_exists('ssMenu','foldcats')) {
-		//add_action('plugins_loaded', 'ss_menu_widget_init');
 		ss_menu_widget_init();
 	} else {
-//echo'can not find foldcats';
+
 		$fname = basename(__FILE__);
 		$current = get_settings('active_plugins');
 		array_splice($current, array_search($fname, $current), 1 ); // Array-fu!
@@ -115,15 +114,22 @@
 	      if ( !isset($ss_menu['title']) && isset($options[$widget_number]) ) // user clicked cancel
 	        continue;
 	      $title = strip_tags(stripslashes($ss_menu['title']));
-	      $catSortOrder= 'ASC' ;
-	      if($ss_menu['catSortOrder'] == 'DESC') {
-	        $catSortOrder= 'DESC' ;
+	      $catSortOrder= 'DESC' ;
+	      if($ss_menu['catSortOrder'] == 'ASC') {
+	        $catSortOrder= 'ASC' ;
 	      }
-	      $showPosts= 'yes' ;
-	      if($ss_menu['showPosts'] == 'no') {
-	        $showPosts= 'no' ;
+            
+          $useDescription= 'yes' ;
+	      if($ss_menu['useDescription'] == 'no') {
+	        $useDescription= 'no' ;
 	      }
-	     /**/ 
+            
+	      if( isset($ss_menu['moretext'] )) {
+	        $moretext = $ss_menu['moretext'] ;
+	      }
+	      if( isset($ss_menu['tipText'] )) {
+	        $tipText = $ss_menu['tipText'] ;
+	      }
 	      $linkToCat= 'yes' ;
 	      if($ss_menu['linkToCat'] == 'no') {
 	        $linkToCat= 'no' ;
@@ -132,9 +138,16 @@
 	      if( isset($ss_menu['showPostCount'])) {
 	        $showPostCount= 'yes' ;
 	      }
-	      $showPages= 'no' ;
-	      if( isset($ss_menu['showPages'])) {
-	        $showPages= 'yes' ;
+	      $showMorePosts= 'no' ;
+	      if( isset($ss_menu['showMorePosts'])) {
+	        $showMorePosts= 'yes' ;
+	      }
+	      $showEmptyCat= 'no' ;
+	      if( isset($ss_menu['showEmptyCat'])) {
+	        $showEmptyCat= 'yes' ;
+	      }
+	      if( isset($ss_menu['limitPosts'])) {
+	        $limitPosts = $ss_menu['limitPosts'] ;
 	      }
 	      if($ss_menu['catSort'] == 'catName') {
 	        $catSort= 'catName' ;
@@ -150,9 +163,9 @@
 	        $catSort= '' ;
 	        $catSortOrder= '' ;
 	      }
-	      $postSortOrder= 'ASC' ;
-	      if($ss_menu['postSortOrder'] == 'DESC') {
-	        $postSortOrder= 'DESC' ;
+	      $postSortOrder= 'DESC' ;
+	      if($ss_menu['postSortOrder'] == 'ASC') {
+	        $postSortOrder= 'ASC' ;
 	      }
 	      if($ss_menu['postSort'] == 'postTitle') {
 	        $postSort= 'postTitle' ;
@@ -176,9 +189,9 @@
 	      $inExcludeCats=addslashes($ss_menu['inExcludeCats']);
 	      
 	      $options[$widget_number] = compact( 'title','showPostCount','catSort',
-	          'catSortOrder','expand','inExclude', 'showPosts',
-	          'inExcludeCats','postSort','postSortOrder','showPages', 
-	          'catfeed','linkToCat' );
+	          'catSortOrder','expand','inExclude', 
+	          'inExcludeCats','postSort','postSortOrder','limitPosts', 
+	          'catfeed', 'moretext', 'tipText', 'showMorePosts', 'showEmptyCat', 'useDescription' );
 	    }
 	
 	    update_option('ssMenu_widget_options', $options);
@@ -190,15 +203,17 @@
 	    $title = 'SuperSlider-Menu';
 	    $showPostCount = 'yes';
 	    $catSort = 'catName';
-	    $catSortOrder = 'ASC';
-	    $postSort = 'postTitle';
-	    $postSortOrder = 'ASC';
+	    $catSortOrder = 'DESC';
+	    $postSort = 'postDate';
+	    $postSortOrder = 'DESC';
 	    $number = '%i%';
 	    $inExclude='include';
 	    $inExcludeCats='';
-	    $showPosts='yes';
-	    $linkToCat='yes';
-	    $showPages='no';
+	    $moretext='more from';
+	    $tipText='View listing of all entries under ';
+	    $showMorePosts='yes';
+	    $limitPosts='5';
+	    $useDescription= 'yes';
 	    $catfeed='none';
 	  } else {
 	    $title = attribute_escape($options[$number]['title']);
@@ -209,9 +224,12 @@
 	    $catSortOrder = $options[$number]['catSortOrder'];
 	    $postSort = $options[$number]['postSort'];
 	    $postSortOrder = $options[$number]['postSortOrder'];;
-	    $showPosts = $options[$number]['showPosts'];
-	    $showPages = $options[$number]['showPages'];
-	    $linkToCat = $options[$number]['linkToCat'];
+	    $moretext = $options[$number]['moretext'];
+	    $tipText = $options[$number]['tipText'];
+	    $showMorePosts = $options[$number]['showMorePosts'];
+	    $showEmptyCat = $options[$number]['showEmptyCat'];
+	    $limitPosts = $options[$number]['limitPosts'];
+	    $useDescription = $options[$number]['useDescription'];
 	    $catfeed = $options[$number]['catfeed'];
 	  }
 
@@ -220,27 +238,43 @@
     echo '<p style="text-align:left;"><label for="ss_menu-title-'.$number.'">' . __('Title:') . '<input class="widefat" style="width: 200px;" id="ss_menu-title-'.$number.'" name="ss_menu['.$number.'][title]" type="text" value="'.$title.'" /></label></p>';
   ?>
 	
-	<p>This is control<br />
-		<input type="checkbox" name="ss_menu[<?php echo $number ?>][showPostCount]" 
-	<?php if ($showPostCount=='yes')  echo 'checked'; ?>
-		id="ss_menu-showPostCount-
-	<?php echo $number ?>
-		">
-		</input>
-		<label for="ss_menuShowPostCount">
-			Show Post Count 
-		</label>
-		<input type="checkbox" name="ss_menu[<?php echo $number ?>][showPages]" 
-	<?php if ($showPages=='yes')  echo 'checked'; ?>
-		id="ss_menu-showPages-
-	<?php echo $number ?>
-		">
-		</input>
-		<label for="ss_menuShowPages">
-			Show Pages as well as posts 
-		</label>
-	</p>
 	<p>
+		<label for="ss_menu-showPostCount-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showPostCount]" 
+	<?php if ($showPostCount =='yes')  echo 'checked'; ?> id="ss_menu-showPostCount-<?php echo $number ?>">
+		</input> Show Post Count. </label>
+	    <label for="ss_menu-showEmptyCat-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showEmptyCat]"
+	<?php if ($showEmptyCat =='yes')  echo 'checked'; ?> id="ss_menu-showEmptyCat-<?php echo $number ?>">
+		</input> Show Empty Categories.</label>
+</p>
+
+<p>
+		<label for="ss_menulimitPosts-<?php echo $number ?>">Limit # of posts, 
+		<input type="text" name="ss_menu[<?php echo $number; ?>][limitPosts]" value="<?php echo $limitPosts; ?>" id="ss_menulimitPosts-<?php echo $number ?>" size="3" maxlength="3">
+	</input> to be shown, per category.</label>
+</p>
+<hr />
+<p>
+	<label for="ss_menu-showMorePosts-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showMorePosts]" 
+	<?php if ($showMorePosts =='yes')  echo 'checked'; ?> id="ss_menu-showMorePosts-<?php echo $number ?>">
+		</input> Add more link :</label>
+	
+	<label for="ss_menu-moretext-<?php echo $number ?>">text : 
+	<input type="text" name="ss_menu[<?php echo $number ?>][moretext]" size="8" value="<?php echo $moretext ?>" id="ss_menu-moretext-<?php echo $number ?>">
+	</input> Category name. </label>
+</p>
+<hr />
+<p>
+	<label for="ss_menu-useDescription-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][useDescription]"
+	<?php if ($useDescription =='yes')  echo 'checked'; ?> id="ss_menu-useDescription-<?php echo $number ?>">
+		</input> Use category description for tooltips. </label>
+    </p>
+    <p>
+	<label for="ss_menu-tipText-<?php echo $number ?>">Default tooltip text : <br />
+	<input type="text" name="ss_menu[<?php echo $number ?>][tipText]" size="24" value="<?php echo $tipText ?>" id="ss_menu-tipText-<?php echo $number ?>">
+	</input> Category name.</label><br /> <small>(Tooltip shows category description. This will show if there is no description)</small>
+</p>
+<hr />
+<p>
 		Sort Categories by:
 		<br />
 		<select name="ss_menu[<?php echo $number ?>][catSort]">
@@ -265,127 +299,94 @@
 			id="sortCount" value='catCount'> category Count
 			</option>
 		</select>
-		<input type="radio" name="ss_menu[<?php echo $number ?>][catSortOrder]" 
-	<?php if($catSortOrder=='ASC') echo 'checked'; ?>
-		id="ss_menu-catSortASC-
-	<?php echo $number ?>
-		" value='ASC'>
-		</input>
-		<label for="ss_menuCatSortASC">
-			Ascending
+		
+		<label for="ss_menu-catSortASC-<?php echo $number ?>">
+		<input type="radio" name="ss_menu[<?php echo $number ?>][catSortOrder]" <?php if($catSortOrder=='ASC') echo 'checked'; ?>
+		id="ss_menu-catSortASC-<?php echo $number ?>" value='ASC'>
+		</input> Ascending
 		</label>
-		<input type="radio" name="ss_menu[<?php echo $number ?>][catSortOrder]" 
-	<?php if($catSortOrder=='DESC') echo 'checked'; ?>
-		id="ss_menu-catSortDESC-
-	<?php echo $number ?>
-		" value='DESC'>
-		</input>
-		<label for="ss_menuCatSortDESC">
-			Descending
+		
+		<label for="ss_menu-catSortDESC-<?php echo $number ?>">
+		<input type="radio" name="ss_menu[<?php echo $number ?>][catSortOrder]" <?php if($catSortOrder=='DESC') echo 'checked'; ?>
+		id="ss_menu-catSortDESC-<?php echo $number ?>" value='DESC'>
+		</input> Descending
 		</label>
-	</p>
-	<p>
+</p>
+<p>
 		Sort Posts by:
 		<br />
 		<select name="ss_menu[<?php echo $number ?>][postSort]">
-			<option 
-	<?php if($postSort=='postTitle') echo 'selected'; ?>
-			id="sortPostTitle-
-	<?php echo $number ?>
-			" value='postTitle'>Post Title
+			<option <?php if($postSort=='postTitle') echo 'selected'; ?>
+			id="sortPostTitle-<?php echo $number ?>" value='postTitle'>Post Title
 			</option>
-			<option 
-	<?php if($postSort=='postId') echo 'selected'; ?>
-			id="sortPostId-
-	<?php echo $number ?>
-			" value='postId'>Post id
+			<option <?php if($postSort=='postId') echo 'selected'; ?>
+			id="sortPostId-<?php echo $number ?>" value='postId'>Post id
 			</option>
-			<option 
-	<?php if($postSort=='postDate') echo 'selected'; ?>
-			id="sortPostDate-
-	<?php echo $number ?>
-			" value='postDate'>Post Date
+			<option <?php if($postSort=='postDate') echo 'selected'; ?>
+			id="sortPostDate-<?php echo $number ?>" value='postDate'>Post Date
 			</option>
-			<option 
-	<?php if($postSort=='postComment') echo 'selected'; ?>
-			id="sortComment-
-	<?php echo $number ?>
-			" value='postComment'>Post Comment Count
+			<option <?php if($postSort=='postComment') echo 'selected'; ?>
+			id="sortComment-<?php echo $number ?>" value='postComment'>Post Comment Count
 			</option>
 		</select>
-		<input type="radio" name="ss_menu[<?php echo $number ?>][postSortOrder]" 
-	<?php if($postSortOrder=='ASC') echo 'checked'; ?>
+		
+		<label for="postSortASC">
+		<input type="radio" name="ss_menu[<?php echo $number ?>][postSortOrder]" <?php if($postSortOrder=='ASC') echo 'checked'; ?>
 		id="postSortASC" value='ASC'>
-		</input>
-		<label for="postPostASC">
-			Ascending
+		</input> Ascending
 		</label>
-		<input type="radio" name="ss_menu[<?php echo $number ?>][postSortOrder]" 
-	<?php if($postSortOrder=='DESC') echo 'checked'; ?>
-		id="postPostDESC" value='DESC'>
-		</input>
+		
 		<label for="postPostDESC">
-			Descending
+		<input type="radio" name="ss_menu[<?php echo $number ?>][postSortOrder]" <?php if($postSortOrder=='DESC') echo 'checked'; ?>
+		id="postPostDESC" value='DESC'>
+		</input> Descending
 		</label>
-	</p>
-	<p>Expanding shows:<br />
-     <input type="radio" name="ss_menu[<?php echo $number ?>][showPosts]" 
-     <?php if($showPosts=='yes') echo 'checked'; ?> id="showPostsYes" value='yes'></input> <label for="showPostsYes">Sub-categories and Posts</label>
-     <input type="radio" name="ss_menu[<?php echo $number ?>][showPosts]"
-     <?php if($showPosts=='no') echo 'checked'; ?> id="showPostsNo" value='no'></input> <label for="showPostsNO">Just Sub-categories</label>
-    </p>
-
-
-	<p>
+</p>
+<hr />
+<p>
 	<select name="ss_menu[<?php echo $number ?>][inExclude]">
-		<option 
-<?php if($inExclude=='include') echo 'selected'; ?>
-		id="inExcludeInclude-
-<?php echo $number ?>
-		" value='include'>Include
+		
+		<option <?php if($inExclude=='include') echo 'selected'; ?>
+		id="inExcludeInclude-<?php echo $number ?>" value='include'>Include
 		</option>
-		<option 
-<?php if($inExclude=='exclude') echo 'selected'; ?>
-		id="inExcludeExclude-
-<?php echo $number ?>
-		" value='exclude'>Exclude
+		
+		<option <?php if($inExclude=='exclude') echo 'selected'; ?>
+		id="inExcludeExclude-<?php echo $number ?>" value='exclude'>Exclude
 		</option>
 	</select>
-	these categories (separated by commas):
-	<br />
+	
+	<label for="ss_menu-inExcludeCats-<?php echo $number ?>">
+	These categories (ID separated by commas):
 	<input type="text" name="ss_menu[<?php echo $number ?>][inExcludeCats]" value="<?php echo $inExcludeCats ?>" id="ss_menu-inExcludeCats-<?php echo $number ?>">
 	</input>
-<p>
-	Include RSS link <input type="radio" name="ss_menu[<?php echo $number ?>][catfeed]" 
-<?php if($catfeed=='none') echo 'checked'; ?>
-	id="ss_menu-catfeedNone-
-<?php echo $number ?>
-	" value='none'>
-	</input>
-	<label for="ss_menu-catfeedNone">
+	</label>	
+</p>
+<hr />
+<p>Include RSS link 
+	<label for="ss_menu-catfeedNone-<?php echo $number ?>">
+	<input type="radio" name="ss_menu[<?php echo $number ?>][catfeed]" 
+        <?php if($catfeed=='none') echo 'checked'; ?>
+	id="ss_menu-catfeedNone-<?php echo $number ?>" value='none'>
+	</input>	
 		None
 	</label>
+	<label for="ss_menu-catfeedText-<?php echo $number ?>">
 	<input type="radio" name="ss_menu[<?php echo $number ?>][catfeed]" 
-<?php if($catfeed=='text') echo 'checked'; ?>
-	id="ss_menu-catfeedText-
-<?php echo $number ?>
-	" value='text'>
-	</input>
-	<label for="ss_menu-catfeedYes">
+        <?php if($catfeed=='text') echo 'checked'; ?>
+	id="ss_menu-catfeedText-<?php echo $number ?>" value='text'>
+	</input>	
 		text (RSS)
 	</label>
+	<label for="ss_menu-catfeedImage-<?php echo $number ?>">
 	<input type="radio" name="ss_menu[<?php echo $number ?>][catfeed]" 
-<?php if($catfeed=='image') echo 'checked'; ?>
-	id="ss_menu-catfeedImage-
-<?php echo $number ?>
-	" value='image'>
-	</input>
-	<label for="catfeedImage">
+        <?php if($catfeed=='image') echo 'checked'; ?>
+	id="ss_menu-catfeedImage-<?php echo $number ?>" value='image'>
+	</input>	
 		image 
 		<img src='../wp-includes/images/rss.png' />
 	</label>
 </p>
-</p>
+
 <?php
     echo '<input type="hidden" id="ss_menu-submit-'.$number.'" name="ss_menu['.$number.'][submit]" value="1" />';
 	}
