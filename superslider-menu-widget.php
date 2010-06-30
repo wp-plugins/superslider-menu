@@ -27,6 +27,8 @@
 
             ssMenu::$add_ssmenu_script = true;//switch on js loader
 	        ssMenu::foldcats($number);
+	        //ssMenu::ssmenu_starter();
+	        add_action('wp_footer', array('ssMenu','ssmenu_starter'));
 	        
 	       } else {
 	        echo "<ul>\n";
@@ -113,39 +115,34 @@
 	    foreach ( (array) $_POST['ss_menu'] as $widget_number => $ss_menu ) {
 	      if ( !isset($ss_menu['title']) && isset($options[$widget_number]) ) // user clicked cancel
 	        continue;
+	      
+	      extract ($ss_menu);
 	      $title = strip_tags(stripslashes($ss_menu['title']));
+	      
 	      $catSortOrder= 'DESC' ;
-	      if($ss_menu['catSortOrder'] == 'ASC') {
-	        $catSortOrder= 'ASC' ;
-	      }
-            
-          $useDescription= 'yes' ;
-	      if($ss_menu['useDescription'] == 'no') {
-	        $useDescription= 'no' ;
-	      }
-            
-	      if( isset($ss_menu['moretext'] )) {
-	        $moretext = $ss_menu['moretext'] ;
-	      }
-	      if( isset($ss_menu['tipText'] )) {
-	        $tipText = $ss_menu['tipText'] ;
-	      }
+	      if($ss_menu['catSortOrder'] == 'ASC') $catSortOrder= 'ASC' ;
+	      
+          
+	      if( isset($ss_menu['moretext'] )) $moretext = $ss_menu['moretext'] ;
+	      
+	      if( isset($ss_menu['tipText'] )) $tipText = $ss_menu['tipText'] ;
+	      
 	      $linkToCat= 'yes' ;
-	      if($ss_menu['linkToCat'] == 'no') {
-	        $linkToCat= 'no' ;
-	      }
+	      if($ss_menu['linkToCat'] == 'no') $linkToCat= 'no' ;
+	      
 	      $showPostCount= 'no' ;
-	      if( isset($ss_menu['showPostCount'])) {
-	        $showPostCount= 'yes' ;
-	      }
+	      if( isset($ss_menu['showPostCount'])) $showPostCount= 'yes' ;
+	      
 	      $showMorePosts= 'no' ;
-	      if( isset($ss_menu['showMorePosts'])) {
-	        $showMorePosts= 'yes' ;
-	      }
+	      if( isset($ss_menu['showMorePosts'])) $showMorePosts= 'yes' ;
+	      
 	      $showEmptyCat= 'no' ;
-	      if( isset($ss_menu['showEmptyCat'])) {
-	        $showEmptyCat= 'yes' ;
-	      }
+	      if( isset($ss_menu['showEmptyCat']))  $showEmptyCat= 'yes' ;
+	      
+	      $usedescrip= 'no' ;
+	      if( isset($ss_menu['usedescrip'])) $usedescrip= 'yes' ;
+
+	      
 	      if( isset($ss_menu['limitPosts'])) {
 	        $limitPosts = $ss_menu['limitPosts'] ;
 	      }
@@ -181,17 +178,14 @@
 	      }
 	     
 	      $catfeed= $ss_menu['catfeed'];
+	      
 	      $inExclude= 'include' ;
-	      if($ss_menu['inExclude'] == 'exclude') {
-	        $inExclude= 'exclude' ;
-	      }
-	     
+	      if($ss_menu['inExclude'] == 'exclude') $inExclude= 'exclude' ;
+
 	      $inExcludeCats=addslashes($ss_menu['inExcludeCats']);
 	      
-	      $options[$widget_number] = compact( 'title','showPostCount','catSort',
-	          'catSortOrder','expand','inExclude', 
-	          'inExcludeCats','postSort','postSortOrder','limitPosts', 
-	          'catfeed', 'moretext', 'tipText', 'showMorePosts', 'showEmptyCat', 'useDescription' );
+	      $options[$widget_number] = compact( 'title','showPostCount','catSort','catSortOrder','expand','inExclude', 
+	          'inExcludeCats','postSort','postSortOrder','limitPosts','moretext','tipText','showMorePosts','showEmptyCat','usedescrip','catfeed');
 	    }
 	
 	    update_option('ssMenu_widget_options', $options);
@@ -213,7 +207,7 @@
 	    $tipText='View listing of all entries under ';
 	    $showMorePosts='yes';
 	    $limitPosts='5';
-	    $useDescription= 'yes';
+	    $usedescrip= 'yes';
 	    $catfeed='none';
 	  } else {
 	    $title = attribute_escape($options[$number]['title']);
@@ -229,7 +223,7 @@
 	    $showMorePosts = $options[$number]['showMorePosts'];
 	    $showEmptyCat = $options[$number]['showEmptyCat'];
 	    $limitPosts = $options[$number]['limitPosts'];
-	    $useDescription = $options[$number]['useDescription'];
+	    $usedescrip = $options[$number]['usedescrip'];
 	    $catfeed = $options[$number]['catfeed'];
 	  }
 
@@ -240,11 +234,11 @@
 	
 	<p>
 		<label for="ss_menu-showPostCount-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showPostCount]" 
-	<?php if ($showPostCount =='yes')  echo 'checked'; ?> id="ss_menu-showPostCount-<?php echo $number ?>">
-		</input> Show Post Count. </label>
+	<?php if ($showPostCount =='yes')  echo 'checked'; ?> id="ss_menu-showPostCount-<?php echo $number ?>" />
+		 Show Post Count. </label>
 	    <label for="ss_menu-showEmptyCat-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showEmptyCat]"
-	<?php if ($showEmptyCat =='yes')  echo 'checked'; ?> id="ss_menu-showEmptyCat-<?php echo $number ?>">
-		</input> Show Empty Categories.</label>
+	<?php if ($showEmptyCat =='yes')  echo 'checked'; ?> id="ss_menu-showEmptyCat-<?php echo $number ?>" />
+		 Show Empty Categories.</label>
 </p>
 
 <p>
@@ -255,8 +249,8 @@
 <hr />
 <p>
 	<label for="ss_menu-showMorePosts-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showMorePosts]" 
-	<?php if ($showMorePosts =='yes')  echo 'checked'; ?> id="ss_menu-showMorePosts-<?php echo $number ?>">
-		</input> Add more link :</label>
+	<?php if ($showMorePosts =='yes')  echo 'checked'; ?> id="ss_menu-showMorePosts-<?php echo $number ?>" name="ss_menu-showMorePosts-<?php echo $number ?>" />
+		 Add more link :</label>
 	
 	<label for="ss_menu-moretext-<?php echo $number ?>">text : 
 	<input type="text" name="ss_menu[<?php echo $number ?>][moretext]" size="8" value="<?php echo $moretext ?>" id="ss_menu-moretext-<?php echo $number ?>">
@@ -264,9 +258,9 @@
 </p>
 <hr />
 <p>
-	<label for="ss_menu-useDescription-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][useDescription]"
-	<?php if ($useDescription =='yes')  echo 'checked'; ?> id="ss_menu-useDescription-<?php echo $number ?>">
-		</input> Use category description for tooltips. </label>
+	<label for="ss_menu-usedescrip-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][usedescrip]"
+	<?php if ($usedescrip =='yes')  echo 'checked'; ?> id="ss_menu-usedescrip-<?php echo $number ?>" name="ss_menu-usedescrip-<?php echo $number ?>" />
+		 Use category description for tooltips. </label>
     </p>
     <p>
 	<label for="ss_menu-tipText-<?php echo $number ?>">Default tooltip text : <br />

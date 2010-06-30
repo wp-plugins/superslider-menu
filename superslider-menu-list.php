@@ -35,7 +35,7 @@ function add_feedlink($catfeed,$cat) {
         }
         
       $url = get_settings(siteurl) ;
-      $rssLink .= '<a class="menuRss" href="' . get_category_feed_link($cat->term_id) .'"><img src="'.$rssPath.'" alt="rss" /></a>';
+      $rssLink .= '<a class="menuRss" href="' . get_category_feed_link($cat->term_id) .'"><img src="'.$rssPath.'" alt="rss" width="14" height="14" /></a>';
             
     } else {		
         $rssLink = '';
@@ -68,7 +68,7 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
                if (!in_array($cat2->term_id, $parents)) {
 
                     $subCatLinks .= "<div class='ssmToggleBar ssm_".$cat2->slug."' ><span class='subsym show_".$mylevel."'>&nbsp;</span>" ;
-                    $link2 = make_cat_link($cat2, $tipText, $useDescription);
+                    $link2 = make_cat_link($cat2, $tipText, $usedescrip);
                     $subCatCount = 0;
                     
                } else {                  
@@ -80,7 +80,7 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
                                       //$cat, $categories, $posts, $subCatCount, $subCatPostCount, $number, $grandParents, $parents, $children, $grandChildren
                   
                     $subCatLinks .= "\n<div class='ssmToggleBar ssm_".$cat2->slug."' >"."<span class='subsym show_".$mylevel."'>&nbsp;</span>" ;
-                    $link2 = make_cat_link($cat2, $tipText, $useDescription);
+                    $link2 = make_cat_link($cat2, $tipText, $usedescrip);
                       
                 }
                 
@@ -139,11 +139,11 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
   return array($subCatLinks,$subCatCount,$subCatPostCount,$subCatPosts);
 }
 
-function make_cat_link($cat, $tipText, $useDescription) {
+function make_cat_link($cat, $tipText, $usedescrip) {
    
     $link = "<a href='".get_category_link($cat->term_id)."' class='tool catLink' ";
 
-    if ( $useDescription == 'yes' && !empty($cat->description) ) {
+    if ( $usedescrip == 'yes' && !empty($cat->description) ) {
             $link .= 'title="' . wp_specialchars(apply_filters('description',$cat->description,$cat)) . '"';
         
     } else {
@@ -159,15 +159,17 @@ function make_cat_link($cat, $tipText, $useDescription) {
 function ssm_list_categories($number) {
 
 	   global $wpdb,$options;
-		
+
+//echo '<br /> the menu id is ___ : ';
+//echo $myssMenu->$menu_id.' : ___ <br />';
+
 		$options = get_option('ssMenu_widget_options');
 		extract($options[$number]);
 
 		// check for exclusion or inclusion of categories
 		$inExclusions = array();
-//echo 'the inExclude : '.$inExclude.'.<br />';
-//echo 'the inExcludeCats : '.$inExcludeCats.'.<br />';
-        if ( !empty($inExclude) && !empty($inExcludeCats) ) {
+
+        if ( !empty($inExcludeCats) ) {
            $exterms = preg_split('/[,]+/',$inExcludeCats);
             if ($inExclude == 'include') {
                 $in='IN';
@@ -184,13 +186,8 @@ function ssm_list_categories($number) {
                 }
             }
         }
-//echo 'the inExclusions : '.$inExclusions.'.<br />';
+        $isPage="AND $wpdb->posts.post_type='post'";
 
-        $isPage='';
-        
-        if (!$showPages) {
-            $isPage="AND $wpdb->posts.post_type='post'";
-        }
         if ( empty($inExclusions) ) {
             $inExcludeQuery = "''";					
         } else {				
@@ -252,59 +249,44 @@ function ssm_list_categories($number) {
       $categories = $wpdb->get_results($catquery);			  
       $posts= $wpdb->get_results($postquery); 
 
-//echo 'the catquery is :<br />'.$catquery.'.<br />';
-
-/*
-echo 'the categories are :<br />';
-var_dump($categories);
-echo '___________________.<br />';
-*/
       $grandChildren = array();
       $children = array();
       $parents = array();
       $grandParents = array();
 	  $subCatPosts = array();
-	        
-	   $mycats = $categories;
+
 	  // let's remove any empty categories if showEmptyCat is set to no
 	  foreach( $categories as $cat ) {
       
         if( $cat->count == 0 && $showEmptyCat == 'no') {
-        
             $key = array_search($cat, $categories);
             unset($categories[$key]);
-        }     
-       if ( $cat->parent == '0') {
-            
+
+        }
+      }
+
+      $mycats = $categories;
+      foreach( $categories as $cat ) {
+
+       if ( $cat->parent == '0') {            
             array_push( $grandParents, $cat->term_id ); 
             $key = array_search($cat, $categories);
             unset($categories[$key]);
-        } 
-
-
-        if ( $cat->parent != '0'   ) { 
-
-          array_push( $parents, $cat->term_id);
-
         }
+        if ( $cat->parent != '0'   ) array_push( $parents, $cat->term_id);
+
       }
       
-      foreach( $categories as $cat ) {
-        
-        if ( in_array($cat->parent, $parents)) {
-        array_push( $children, $cat->term_id);
-        
-        }
-      }
-      
-      foreach( $categories as $cat ) {
-        
-        if ( in_array($cat->parent, $children) ) {
-        array_push( $grandChildren, $cat->term_id);
+      foreach( $categories as $cat ) {        
+        if ( in_array($cat->parent, $parents)) array_push( $children, $cat->term_id);
 
-        }
+      }      
+      foreach( $categories as $cat ) {        
+        if ( in_array($cat->parent, $children) ) array_push( $grandChildren, $cat->term_id);
+
+        
       }
-$categories = $mycats;
+      $categories = $mycats;
      
       // knock total number of posts to work with down to a max of 1000
       $totalPostCount = count( $posts );
@@ -315,8 +297,13 @@ $categories = $mycats;
       
       }
       
-      // start the html structure
-	  echo '<div id="ssMenuHolder"><div id="ssMenuList">';
+      // set a unique number for the menu
+      global $menu_id;
+        srand((double)microtime()*1000000); 
+        $menu_id = rand(0,1000);
+        
+      // start the html structure  '.$menu_id.'
+	  echo '<div id="ssMenuHolder'.$menu_id.'"><div class="ssMenuList">';
 
       foreach( $categories as $cat ) {
         
@@ -337,7 +324,7 @@ $categories = $mycats;
 
             print( "\n<div class='ssmToggleBar ssm_".$cat->slug."'><span class='subsym show_1'>&nbsp;</span>" );
             
-            $link = make_cat_link($cat, $tipText, $useDescription);
+            $link = make_cat_link($cat, $tipText, $usedescrip);
             
 			if( $showPostCount == 'yes') $link .= ' <span class="postCount">('. $theCount .')</span>';			
 			
@@ -381,5 +368,6 @@ $categories = $mycats;
    
    }
       echo "\n</div></div><!-- closeing the superslider-menu plugin -->\n";
+      //$myssMenu->ssmenu_starter();
  }
 ?>

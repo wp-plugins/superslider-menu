@@ -52,7 +52,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		        "tipTitle" => 'title',
 		        "tipText" => 'rel',
 				"nav_follow" => "on",
-				"nav_followspeed" => "700"
+				"nav_followspeed" => "700",
+				'delete_options' => ''
 			);
 			update_option('ssMenu_options', $ssmOldOptions);
 				
@@ -92,7 +93,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				'tipTitle'			=> $_POST["op_tipTitle"],
 				'tipText'			=> $_POST["op_tipText"],
 				'nav_follow'		=> $_POST["op_navfollow"],
-				'nav_followspeed'	=> $_POST["op_navfollowspeed"]
+				'nav_followspeed'	=> $_POST["op_navfollowspeed"],
+				'delete_options'	=> $_POST["op_delete_options"]
 			);	
 
 		update_option('ssMenu_options', $ssmNewOptions);
@@ -339,7 +341,13 @@ jQuery(document).ready(function(){
          <label for="op_toolClass"><?php _e('Add tooltip to objects with the class name of: '); ?>
          <input type="text" name="op_toolClass" id="op_toolClass" size="15" maxlength="40"
          value="<?php echo ($ssmNewOptions['toolClass']); ?>"/></label> 
-         <small><?php _e(' ',$ssm_domain); ?></small>
+                  	<a href="#menu_tips_info" class="ss_tool" style="padding: 2px 8px;"> ? </a></label>
+    <div id ="menu_tips_info" class="info_box" style="display:none;">
+                       <h3><?php _e('field: tooltip class info ',$ssm_domain); ?></h3>
+                        <?php _e('Add the class of .tool to any object, or<br />
+                        Enter a single class here, ie: .myclass a.<br />
+                        You can also add a comma seperated list,<br />
+                        ie: .myclass a, .myotherclass a.<br />',$ssm_domain); ?></div> 
      
      </li>
      <li style="border-bottom:1px solid #cdcdcd; padding: 6px 0px 8px 0px;">
@@ -509,7 +517,13 @@ jQuery(document).ready(function(){
 	
 </div><!-- close frag 6 -->
 </div><!--  close tabs -->
-
+<p>
+<label for="op_delete_options">
+		      <input type="checkbox" <?php if($ssmNewOptions['delete_options'] == "on") echo $checked; ?> name="op_delete_options" id="op_delete_options" />
+		      <?php _e('Remove options. '); ?></label>	
+		 <br /><span class="setting-description"><?php _e('Select to have the plugin options removed from the data base upon deactivation.'); ?></span>
+		 <br />
+</p>
 
 <p class="submit">
 		<input type="submit" name="set_defaults" value="<?php _e('Reload Default Options',$ssm_domain); ?> &raquo;" />

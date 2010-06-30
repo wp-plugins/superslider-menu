@@ -5,7 +5,7 @@ Plugin URI: http://wp-superslider.com/superslider-menu
 Author URI: http://wp-superslider.com
 Description: Animated Fold down category Navigation List uses Mootools 1.2 javascript to expand and collapse categories, show subcategories and posts that belong to the category. 
 Author: Daiv Mowbray
-Version: 2.0
+Version: 2.1
 Tags: animation, animated, sidebar, widget, categories, mootools 1.2, mootools, menu, slider, navigate
 
 Copyright 2008
@@ -36,6 +36,7 @@ if (!class_exists("ssMenu")) {
 	var $css_path;
 	var $css_theme = '';
 	var $ssmOpOut;
+	var $menu_id;
 	var $defaultOptions;
 	var $ssModOpOut;
 	var $ssBaseOpOut;
@@ -106,7 +107,8 @@ if (!class_exists("ssMenu")) {
 		        "tipTitle" => 'title',
 		        "tipText" => 'rel',
 				"nav_follow" => "on",
-				"nav_followspeed" => "700");//end Follower ops
+				"nav_followspeed" => "700",
+				'delete_options' => '');//end Follower ops
 		
 		$getOptions = get_option($this->OptionsName);
 		if (!empty($getOptions)) {
@@ -144,7 +146,7 @@ if (!class_exists("ssMenu")) {
 			
 			if (!class_exists('ssBase')) $plugin_page = add_options_page(__('SuperSlider Menu'),__('SuperSlider-Menu'), 8, 'superslider-menu', array(&$this, 'ssmenu_ui'));
 						
-			add_filter('plugin_action_links', array(&$this, 'filter_plugin_menu'), 10, 2 );
+			add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(&$this, 'filter_plugin_menu'), 10, 2 );
 			add_action('admin_print_styles', array(&$this,'ss_admin_style'));
 			
 			if (!class_exists('ssBase')) add_action('admin_print_scripts-'.$plugin_page, array(&$this,'ss_admin_script'));	
@@ -152,24 +154,35 @@ if (!class_exists("ssMenu")) {
 	}
 		
 	function ss_admin_style(){
-
-        $cssAdminFile = WP_PLUGIN_URL.'/superslider-menu/admin/ss_admin_style.css';    			    		
-        wp_register_style('superslider_admin', $cssAdminFile);
-        wp_enqueue_style( 'superslider_admin');
-    	
+	//if (strpos($_SERVER["REQUEST_URI"], "wp-admin/admin.php?page=superslider-menu") !== FALSE)
+	// don't load js and css when not needed, these should be for the meta box on post-new and post-edit
+	//return;
+        if (is_admin() ) {
+            $cssAdminPath = WP_PLUGIN_URL.'/superslider-menu/admin/'; 
+            
+            wp_register_style('superslider_admin', $cssAdminPath.'ss_admin_style.css');
+            wp_register_style('superslider_admin_tool', $cssAdminPath.'ss_admin_tool.css');
+            
+            wp_enqueue_style( 'superslider_admin');
+            wp_enqueue_style( 'superslider_admin_tool');    	
+    	}
 	}
 	
 	function ss_admin_script(){
-		wp_enqueue_script('jquery-ui-tabs');	// this should load the jquery tabs script into head
+	   	if (is_admin()) {	
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( 'jquery-dimensions' );	  
+            wp_enqueue_script( 'jquery-tooltip' );
+            wp_enqueue_script( 'superslider-admin-tool' );
+		    wp_enqueue_script( 'jquery-ui-tabs' );	// this should load the jquery tabs script into head
 		
+		}
 	}
 		/**
 		* Add link to options page from plugin list.
 		*/
 	function filter_plugin_menu($links, $file) {
-      
       static $this_plugin;
-      
       if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
 
         if( $file == $this_plugin ){
@@ -195,12 +208,12 @@ if (!class_exists("ssMenu")) {
 	
 	function ssmenu_add_js(){
 	    
-	   if ( ! self::$add_ssmenu_script )
-		return;
-
-	   extract($this->ssmOpOut);
+	   //if ( ! self::$add_ssmenu_script )
+		//return;
+       
+	   //extract($this->ssmOpOut);
 	   
-	   if ($nav_follow == 'on') {
+	   if ($this->ssmOpOut[nav_follow] == 'on') {
           wp_print_scripts('navfollow');         
        }
 	   
@@ -218,14 +231,16 @@ if (!class_exists("ssMenu")) {
 	}	
 	function ssmenu_tooltips_starter(){
  
-        extract($this->ssmOpOut);
-        
-        if (class_exists('ssBase') && $this->ssModOpOut == '') {
+        //extract($this->ssmOpOut);
+        $op = get_option('ssMenu_options');
+		extract($op);
+		
+        if (class_exists('ssBase') ) { //&& $this->ssModOpOut == ''
     
-            $this->ssModOpOut = get_option('ssMod_options');
+            $ssModOpOut = get_option('ssMod_options');
             
         }
-        if ($this->ssModOpOut['tooltips'] !== 'on') {	
+        if ($ssModOpOut['tooltips'] !== 'on') {	
 
             if ( $toolClass == '' ) { $mytool = "'.tool'";            
             } else { $mytool = "['.tool','".$toolClass."']";
@@ -271,21 +286,27 @@ if (!class_exists("ssMenu")) {
 	function ssmenu_starter() {
 		
 	   if ( ! self::$add_ssmenu_script )
-		return;
+		return;/**/
 		
-		extract($this->ssmOpOut);
+		$op = get_option('ssMenu_options');
+		extract($op);
+		//global $ssnOpOut;
+		//extract($this->ssmOpOut);
+		//extract(self::$ssmOpOut);
 		
 		$transType = $trans_type.':'.$trans_typeinout;
-		
-		$ssmstarter = ' "'.$holder.'","'.$toggler.'","'.$content.'","'.$toglink.'","'.$add_mouse.'","'.$always_hide.'","'.$opacity.'","'.$trans_time.'","'.$transType.'","'.$nav_follow.'","'.$nav_followspeed.'"';
+        global $menu_id;		
+
+		$ssmStarter = '"'.$menu_id.'", "'.$holder.$menu_id.'","'.$toggler.'","'.$content.'","'.$toglink.'","'.$add_mouse.'","'.$always_hide.'","'.$opacity.'","'.$trans_time.'","'.$transType.'","'.$nav_follow.'","'.$nav_followspeed.'"';
 
 		echo "\t"."<script type=\"text/javascript\">\n";
 		echo "// <![CDATA[\n";
 		echo "window.addEvent('domready', function() {
-				superslidermenu(".$ssmstarter.");";			
+				var ssmenu".$menu_id." = new superslidermenu(".$ssmStarter.");";			
 		if ($tooltips == 'on'){
 			 
-			 $this->ssmenu_tooltips_starter();			 
+			 //$this->ssmenu_tooltips_starter();
+			 ssMenu::ssmenu_tooltips_starter();
 		} 	
 		echo "});\n";
 		echo "\t"."// ]]>\n</script>\n";
@@ -318,11 +339,19 @@ if (!class_exists("ssMenu")) {
 		$url = get_settings('siteurl');
 		
 		$this->js_path = WP_CONTENT_URL . '/plugins/'. plugin_basename(dirname(__FILE__)) . '/js/';
+
+    	$admin_js_path = WP_CONTENT_URL . '/plugins/'. plugin_basename(dirname(__FILE__)) . '/admin/js/';
+
  			
         wp_register_script( 'moocore', $this->js_path.'mootools-1.2.3-core-yc.js', NULL, '1.2.3');        
         wp_register_script( 'moomore', $this->js_path. 'mootools-1.2.3.1-more.js', array( 'moocore' ), '1.2.3');                
         wp_register_script( 'ssmenu', $this->js_path. 'superslider-menu-min.js', array( 'moomore' ), '2', true);
         wp_register_script( 'navfollow', $this->js_path. 'nav-follow-min.js', array( 'ssmenu' ), '2', true);
+
+        wp_register_script( 'jquery-dimensions', $admin_js_path.'jquery.dimensions.min.js', array( 'jquery' ), '2', false);	    
+        wp_register_script( 'jquery-tooltip', $admin_js_path.'jquery.tooltip.min.js', array( 'jquery-dimensions' ), '2', false);
+        wp_register_script( 'superslider-admin-tool', $admin_js_path.'superslider-admin-tool.js', array( 'jquery-tooltip' ), '2', false);
+
 
         if ($css_load == 'default'){
             $this->cssPath = WP_PLUGIN_URL.'/superslider-menu/plugin-data/superslider/ssMenu/'.$css_theme.'/'.$css_theme.'.css';
@@ -355,25 +384,25 @@ if (!class_exists("ssMenu")) {
 		* Removes user set options from data base upon deactivation
 		*/
 	function options_deactivation() {
-
+	 if($this->ssmOpOut[delete_options] == true){
 		delete_option($this->OptionsName);
 		delete_option('ssMenu_widget_options');
-
+       }
 	}
 	
 		/**
 		* 
 		*/
-	function foldcats($number) {	
-	    	    
-		ssm_list_categories($number);		
+	function foldcats($number) {
 	
+		ssm_list_categories($number);
+		
 	}
 	
 	function setup_widgets() {	
         
         add_action('wp_footer', array(&$this, 'ssmenu_add_js')); 
-        add_action('wp_footer', array(&$this,'ssmenu_starter'));       
+        //add_action('wp_footer', array(&$this,'ssmenu_starter'));       
 		add_action('wp_print_styles', array(&$this,'ssmenu_add_css'));
 		add_action('wp_print_scripts', array(&$this,'ssmenu_add_mootools')); //this loads the mootools scripts.
 		
@@ -389,7 +418,7 @@ if (!class_exists("ssMenu")) {
 *instantiate the class
 */	
 if (class_exists('ssMenu')) {
-	$ssMenu = new ssMenu();
+	$myssMenu = new ssMenu();
 }
 
 ?>

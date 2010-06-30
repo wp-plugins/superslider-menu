@@ -6,18 +6,17 @@
 	padding: 6px;
 	margin: 0px;
 	}
+.ss_menu{
+    position: relative;
+}	
 	
-#ssMenuHolder {
-	position: relative;
-	}
-	
-#ssMenuList{
+.ssMenuList{
 	margin: 0px;
 	padding-right: 0px;
 	border: 1px solid #5091C9;
 	text-transform: capitalize;
 }
-#navArrow {
+.myNavArrow {
 	background-image: url('nav_arrow.png');
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
@@ -28,7 +27,7 @@
 .ssmToggleBar{ padding: 4px;}
 .postCount{ color: #5fc3f4;}
 
-#ssMenuList .ssMore {
+.ssMenuList .ssMore {
 	background-image: url('nav_arrows.png');
 	background-repeat: no-repeat;
 	background-position: right 0px;
@@ -36,11 +35,11 @@
     padding-right:24px;
     text-align:right;
 }
-#ssMenuList .ssMore:hover {
+.ssMenuList .ssMore:hover {
     background-position: right -30px;
 }
 	
-#ssMenuList a{
+.ssMenuList a{
     }
  
 .ssMenuPost { 
@@ -55,9 +54,9 @@
 .showme_3 .ssMenuPost { padding: 6px 2px 4px 24px;}
 .showme_3 { margin-left: 4px; border-left: 1px solid #5091c9;}
 
-#ssMenuList .catLink { padding: 0px 0px; }
+.ssMenuList .catLink { padding: 0px 0px; }
 
-#ssMenuList .linkList { 
+.ssMenuList .linkList { 
     border-left:1px solid #5091C9;
     margin:0 0 0 4px;
     padding: 0px;
@@ -78,15 +77,15 @@
 .subsym:visited {background-position: 0 0;}
 .subsym:hover {background-position: 0 -30px;}
 
-#ssMenuList .open {	
+.ssMenuList .open {	
 	background-image: url('nav_arrows.png');
 	background-repeat: no-repeat;
 	background-position: 0 -60px;
 	padding: 5px 10px ;}
 	
-#ssMenuList .open:link {background-position: 0 -60px;}
-#ssMenuList .open:visited {background-position: 0 -60px;}
-#ssMenuList .open:hover {background-position: 0 -90px;}
+.ssMenuList .open:link {background-position: 0 -60px;}
+.ssMenuList .open:visited {background-position: 0 -60px;}
+.ssMenuList .open:hover {background-position: 0 -90px;}
 
 /* This is the toggler bar animation destinations */
 .tabopen { 
@@ -110,19 +109,19 @@
     }
 
 /* This is the active page*/
-div#active_nav {
+div.active_nav {
 	font-weight: bold;
 	border-left: 5px solid #5091c9;
 	border-top: 5px solid #5091c9; 
     }
 
 /* This is the more from cat link when active*/
-span#active_nav {
+span.active_nav {
     border-top: 1px solid #5091c9; 
     background: #d1d1d1;
 }
 
-#active_nav.catlink{
+.active_nav.catlink{
     background-color: transparent; 
     border-left: 0px solid #fff;
     }

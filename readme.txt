@@ -4,13 +4,13 @@ Donate link: http://wp-superslider.com/support-me/donate/
 Tags: menu, categories, sidebar, widget, mootools
 Requires at least: 2.6
 Tested up to: 3.0
-Stable tag: 2.0
+Stable tag: 2.1
 
 This Animated menu plugin uses Javascript to dynamically expand or collapsable categories and posts.
 
 == Description ==
 
-Complete rebuild for version 2.0! This is your Animated menu plugin that uses Mootools 1.2 javascript to form a multi-level collapsable menu widget in your sidebar for your categories and posts. Automatic opener upon page change. Highly configurable, theme based design, css based animations.
+Upgrading? see the section on upgrading. Complete rebuild for version 2.0! This is your Animated menu plugin that uses Mootools 1.2 javascript to form a multi-level collapsable menu widget in your sidebar for your categories and posts. Automatic opener upon page change. Highly configurable, theme based design, css based animations.
 
 It is parcially based off of the Collapsing Categories Plugin by Robert Felty.
 
@@ -67,7 +67,9 @@ It is parcially based off of the Collapsing Categories Plugin by Robert Felty.
 
 == Upgrade Notice ==
 
-You may need to re-save your settings/ options when upgrading. Version 2 has a new css class structure! You will need to rebuild any custom css work.
+You may need to re-save your settings/ options when upgrading. 
+Version 2 has a new css class structure! #ssMenuList is now .ssMenuList
+You will need to rebuild any custom css work.
 
 
 == Themes ==
@@ -141,6 +143,13 @@ Currently this plugin relies on Javascript to expand and collapse the links.
 If a user's browser doesn't support javascript the list of cats and posts will display normally.
 
 == HISTORY ==
+
+* 2.1 (2010/06/02)
+
+    * fixed link to settings page
+    * added save options upon deactivation option
+    * Fixed the exclude - include bug
+    * Fixed the show - don't show empty categories bug
 
 * 2.0 (2010/03/21)
 	
