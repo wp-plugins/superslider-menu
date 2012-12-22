@@ -16,9 +16,9 @@ var navArrowFollow = function(wrapper, navElemArray, activeID, arrowX, y0ffset, 
 		yerHere.start('background-position', arrowX + 'px ' + actPos + 'px');      
 	};	 
 	//correct IE rendering problem (without this, it wont go to the active nav onload)
-	var actPos = $(activeID).getPosition(wrapper).y  + $(activeID).getSize().y - y0ffset;  
-	$(wrapper).setStyle('background-position', arrowX + 'px ' + actPos + 'px');       	
+	//var actPos = $(activeID).getPosition(wrapper).y  + $(activeID).getSize().y - y0ffset;  
+	//$(wrapper).setStyle('background-position', arrowX + 'px ' + actPos + 'px');       	
 	//works to set image to starting position in other browsers
-	curArrow(); 	
+	//curArrow(); 	
 	$(wrapper).addEvent('mouseleave', curArrow);	
 };

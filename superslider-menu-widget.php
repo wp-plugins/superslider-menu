@@ -1,8 +1,6 @@
 <?php
 
 	function ss_menu_widget($args, $widget_args=1) {
-        
-
 	  
 	  extract($args, EXTR_SKIP);
 	  
@@ -12,10 +10,7 @@
 	  extract($widget_args, EXTR_SKIP);
 	
 	  $options = get_option('ssMenu_widget_options');
-	  
-	  
-	  
-	  
+	    
 	  if ( !isset($options[$number]) )
 	    return;
 	
@@ -42,10 +37,14 @@
 	function ss_menu_widget_init() {
 		
 		if ( !$options = get_option('ssMenu_widget_options') )
-		    $options = array();
-		  $control_ops = array('width' => 380, 'height' => 400, 'id_base' => 'ss_menu');
-			$widget_ops = array('classname' => 'ss_menu', 'description' =>
-		  __('Animated expanding / fold down category menu to show subcategories and posts'));
+		  $options = array();
+		  $control_ops = array(
+		          'width' => 340, 
+		          'height' => 400, 
+		          'id_base' => 'ss_menu');
+		  $widget_ops = array(
+		          'classname' => 'ss_menu', 
+		          'description' => __('Animated expanding / fold down category menu to show subcategories and posts'));
 		  $name = __('SuperSlider Menu');
 		  $id = false;
 		  
@@ -73,11 +72,11 @@
 	} else {
 
 		$fname = basename(__FILE__);
-		$current = get_settings('active_plugins');
+		$current = get_option('active_plugins');
 		array_splice($current, array_search($fname, $current), 1 ); // Array-fu!
 		update_option('active_plugins', $current);
 		do_action('deactivate_' . trim($fname));
-		header('Location: ' . get_settings('siteurl') . '/wp-admin/plugins.php?deactivate=true');
+		header('Location: ' . get_option('siteurl') . '/wp-admin/plugins.php?deactivate=true');
 		exit;
 	}
 
@@ -125,7 +124,7 @@
           
 	      if( isset($ss_menu['moretext'] )) $moretext = $ss_menu['moretext'] ;
 	      
-	      if( isset($ss_menu['tipText'] )) $tipText = $ss_menu['tipText'] ;
+	      if( isset($ss_menu['linkTitle'] )) $linkTitle = $ss_menu['linkTitle'] ;
 	      
 	      $linkToCat= 'yes' ;
 	      if($ss_menu['linkToCat'] == 'no') $linkToCat= 'no' ;
@@ -185,7 +184,7 @@
 	      $inExcludeCats=addslashes($ss_menu['inExcludeCats']);
 	      
 	      $options[$widget_number] = compact( 'title','showPostCount','catSort','catSortOrder','expand','inExclude', 
-	          'inExcludeCats','postSort','postSortOrder','limitPosts','moretext','tipText','showMorePosts','showEmptyCat','usedescrip','catfeed');
+	          'inExcludeCats','postSort','postSortOrder','limitPosts','moretext','linkTitle','showMorePosts','showEmptyCat','usedescrip','catfeed');
 	    }
 	
 	    update_option('ssMenu_widget_options', $options);
@@ -204,13 +203,13 @@
 	    $inExclude='include';
 	    $inExcludeCats='';
 	    $moretext='more from';
-	    $tipText='View listing of all entries under ';
+	    $linkTitle='View listing of all entries under ';
 	    $showMorePosts='yes';
 	    $limitPosts='5';
 	    $usedescrip= 'yes';
 	    $catfeed='none';
 	  } else {
-	    $title = attribute_escape($options[$number]['title']);
+	    $title = esc_attr($options[$number]['title']);
 	    $showPostCount = $options[$number]['showPostCount'];
 	    $inExcludeCats = $options[$number]['inExcludeCats'];
 	    $inExclude = $options[$number]['inExclude'];
@@ -219,7 +218,7 @@
 	    $postSort = $options[$number]['postSort'];
 	    $postSortOrder = $options[$number]['postSortOrder'];;
 	    $moretext = $options[$number]['moretext'];
-	    $tipText = $options[$number]['tipText'];
+	    $linkTitle = $options[$number]['linkTitle'];
 	    $showMorePosts = $options[$number]['showMorePosts'];
 	    $showEmptyCat = $options[$number]['showEmptyCat'];
 	    $limitPosts = $options[$number]['limitPosts'];
@@ -234,10 +233,10 @@
 	
 	<p>
 		<label for="ss_menu-showPostCount-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showPostCount]" 
-	<?php if ($showPostCount =='yes')  echo 'checked'; ?> id="ss_menu-showPostCount-<?php echo $number ?>" />
+	<?php if (isset($showPostCount) && $showPostCount =='yes')  echo 'checked'; ?> id="ss_menu-showPostCount-<?php echo $number ?>" />
 		 Show Post Count. </label>
 	    <label for="ss_menu-showEmptyCat-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showEmptyCat]"
-	<?php if ($showEmptyCat =='yes')  echo 'checked'; ?> id="ss_menu-showEmptyCat-<?php echo $number ?>" />
+	<?php if (isset($showEmptyCat) && $showEmptyCat == 'yes')  echo 'checked'; ?> id="ss_menu-showEmptyCat-<?php echo $number ?>" />
 		 Show Empty Categories.</label>
 </p>
 
@@ -249,7 +248,7 @@
 <hr />
 <p>
 	<label for="ss_menu-showMorePosts-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][showMorePosts]" 
-	<?php if ($showMorePosts =='yes')  echo 'checked'; ?> id="ss_menu-showMorePosts-<?php echo $number ?>" name="ss_menu-showMorePosts-<?php echo $number ?>" />
+	<?php if (isset($showMorePosts) &&  $showMorePosts =='yes')  echo 'checked'; ?> id="ss_menu-showMorePosts-<?php echo $number ?>" name="ss_menu-showMorePosts-<?php echo $number ?>" />
 		 Add more link :</label>
 	
 	<label for="ss_menu-moretext-<?php echo $number ?>">text : 
@@ -259,13 +258,13 @@
 <hr />
 <p>
 	<label for="ss_menu-usedescrip-<?php echo $number ?>"><input type="checkbox" name="ss_menu[<?php echo $number ?>][usedescrip]"
-	<?php if ($usedescrip =='yes')  echo 'checked'; ?> id="ss_menu-usedescrip-<?php echo $number ?>" name="ss_menu-usedescrip-<?php echo $number ?>" />
-		 Use category description for tooltips. </label>
+	<?php if (isset($usedescrip) &&  $usedescrip =='yes')  echo 'checked'; ?> id="ss_menu-usedescrip-<?php echo $number ?>" name="ss_menu-usedescrip-<?php echo $number ?>" />
+		 Use category description for link title. </label>
     </p>
     <p>
-	<label for="ss_menu-tipText-<?php echo $number ?>">Default tooltip text : <br />
-	<input type="text" name="ss_menu[<?php echo $number ?>][tipText]" size="24" value="<?php echo $tipText ?>" id="ss_menu-tipText-<?php echo $number ?>">
-	</input> Category name.</label><br /> <small>(Tooltip shows category description. This will show if there is no description)</small>
+	<label for="ss_menu-linkTitle-<?php echo $number ?>">Default link title text : <br />
+	<input type="text" name="ss_menu[<?php echo $number ?>][linkTitle]" size="30" value="<?php echo $linkTitle ?>" id="ss_menu-linkTitle-<?php echo $number ?>">
+	</input> Category name.</label><br /> <small>(This will be placed in the link title if there is no description)</small>
 </p>
 <hr />
 <p>

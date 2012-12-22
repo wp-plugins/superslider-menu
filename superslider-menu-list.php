@@ -18,23 +18,23 @@ function add_feedlink($catfeed,$cat) {
 		
 		if ( class_exists('ssBase')) { 
 		  $baseoptions = get_option('ssBase_options');
-		  $ss_global_over_ride = $baseoptions[ss_global_over_ride];
+		  $ss_global_over_ride = $baseoptions['ss_global_over_ride'];
 		  if ( $ss_global_over_ride == 'on') {
-		   $options[css_load] = $baseoptions[css_load];
+		   $options['css_load'] = $baseoptions['css_load'];
 		  }
 		}  
       
-        if ($options[css_load] == 'default'){
+        if ($options['css_load'] == 'default'){
             $rssPath = WP_PLUGIN_URL.'/superslider-menu/plugin-data/superslider/ssMenu/rss/rss_out.png';
             
-        }elseif ($options[css_load] == 'pluginData') {
+        }elseif ($options['css_load'] == 'pluginData') {
             $rssPath = WP_CONTENT_URL.'/plugin-data/superslider/ssMenu/rss/rss_out.png';            
         
-        }elseif ($options[css_load] == 'off') {
+        }elseif ($options['css_load'] == 'off') {
             $rssPath = get_option( 'siteurl' ).'/wp-includes/images/rss.png';            
         }
         
-      $url = get_settings(siteurl) ;
+      $url = get_option('siteurl') ;
       $rssLink .= '<a class="menuRss" href="' . get_category_feed_link($cat->term_id) .'"><img src="'.$rssPath.'" alt="rss" width="14" height="14" /></a>';
             
     } else {		
@@ -47,6 +47,8 @@ function add_feedlink($catfeed,$cat) {
 function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, $number, $grandParents, $parents, $children, $grandChildren) { 
       
       global $options;
+       $subCatLinks ='';
+       $subCatPosts ='';
       extract($options[$number]);
 	 
 	 $link2 = '';
@@ -68,7 +70,7 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
                if (!in_array($cat2->term_id, $parents)) {
 
                     $subCatLinks .= "<div class='ssmToggleBar ssm_".$cat2->slug."' ><span class='subsym show_".$mylevel."'>&nbsp;</span>" ;
-                    $link2 = make_cat_link($cat2, $tipText, $usedescrip);
+                    $link2 = make_cat_link($cat2, $linkTitle, $usedescrip);
                     $subCatCount = 0;
                     
                } else {                  
@@ -80,15 +82,16 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
                                       //$cat, $categories, $posts, $subCatCount, $subCatPostCount, $number, $grandParents, $parents, $children, $grandChildren
                   
                     $subCatLinks .= "\n<div class='ssmToggleBar ssm_".$cat2->slug."' >"."<span class='subsym show_".$mylevel."'>&nbsp;</span>" ;
-                    $link2 = make_cat_link($cat2, $tipText, $usedescrip);
+                    $link2 = make_cat_link($cat2, $linkTitle, $usedescrip);
                       
                 }
                 
                 if( $showPostCount == 'yes') {
-
-                    $theCount = $subCatPostCount2 + $cat2->count;
-                    $link2 .= ' <span class="postCount">('.$theCount.')</span> ';
-                      
+					//if (isset($subCatPostCount2)) {
+                    	//$theCount = $subCatPostCount2 + $cat2->count;
+                    	//$theCount =  $cat2->count;
+                    	$link2 .= ' <span class="postCount">('.$cat2->count.')</span> ';
+                  //  }  
                 } 
                   
                 $link2 .= add_feedlink($catfeed,$cat2)."</div>\n";
@@ -139,15 +142,15 @@ function get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, 
   return array($subCatLinks,$subCatCount,$subCatPostCount,$subCatPosts);
 }
 
-function make_cat_link($cat, $tipText, $usedescrip) {
+function make_cat_link($cat, $linkTitle, $usedescrip) {
    
-    $link = "<a href='".get_category_link($cat->term_id)."' class='tool catLink' ";
+    $link = "<a href='".get_category_link($cat->term_id)."' class='catLink tiplink' ";
 
     if ( $usedescrip == 'yes' && !empty($cat->description) ) {
-            $link .= 'title="' . wp_specialchars(apply_filters('description',$cat->description,$cat)) . '"';
+            $link .= 'title="' . esc_html(apply_filters('description',$cat->description,$cat)) . '"';
         
     } else {
-            $link .= 'title="'.$tipText.' '. $cat->name . '"';    
+            $link .= 'title="'.$linkTitle.' '. $cat->name . '"';    
     }
 	
     $link .= '>';   
@@ -317,14 +320,14 @@ function ssm_list_categories($number) {
             // get the sub cats and their posts
             list ($subCatLinks, $subCatCount,$subCatPostCount, $subCatPosts)=
 			 get_sub_cat($cat, $categories, $posts, $subCatCount, $subCatPostCount, $number, $grandParents, $parents, $children, $grandChildren);
-                        //$cat, $categories, $posts, $subCatCount, $subCatPostCount, $number, $grandParents, $parents, $children, $grandChildren
+                       
 
 			$theCount = $cat->count + $subCatPostCount;
 
 
             print( "\n<div class='ssmToggleBar ssm_".$cat->slug."'><span class='subsym show_1'>&nbsp;</span>" );
             
-            $link = make_cat_link($cat, $tipText, $usedescrip);
+            $link = make_cat_link($cat, $linkTitle, $usedescrip);
             
 			if( $showPostCount == 'yes') $link .= ' <span class="postCount">('. $theCount .')</span>';			
 			
@@ -355,7 +358,7 @@ function ssm_list_categories($number) {
 
             }
    
-            if ( ($moreposts == 1) && ($showMorePosts == 'yes') && ($postsincat > $limitPosts) )  echo '<span class="ssMenuPost ssMore"><a href="'.get_category_link($cat->term_id).'">'.$moretext.' '.$cat->name.'</a></span>';
+            if ( (isset($moreposts) && $moreposts == 1) && ($showMorePosts == 'yes') && ($postsincat > $limitPosts) )  echo '<span class="ssMenuPost ssMore"><a href="'.get_category_link($cat->term_id).'">'.$moretext.' '.$cat->name.'</a></span>';
              
             // list the sub cats and their posts
             echo $subCatLinks;

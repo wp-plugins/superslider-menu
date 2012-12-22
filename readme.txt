@@ -1,18 +1,16 @@
 === SuperSlider-Menu ===
 Contributors: Daiv Mowbray
-Donate link: http://wp-superslider.com/support-me/donate/
-Tags: menu, categories, sidebar, widget, mootools
+Donate link: http://superslider.daivmowbray.com/support-me/donate/
+Tags: menu, categories, sidebar, widget, mootools, superslider, animated, folding, post menu, nav, navigation
 Requires at least: 2.6
-Tested up to: 3.0
-Stable tag: 2.1
+Tested up to: 3.4.2
+Stable tag: 2.3
 
 This Animated menu plugin uses Javascript to dynamically expand or collapsable categories and posts.
 
 == Description ==
 
-Upgrading? see the section on upgrading. Complete rebuild for version 2.0! This is your Animated menu plugin that uses Mootools 1.2 javascript to form a multi-level collapsable menu widget in your sidebar for your categories and posts. Automatic opener upon page change. Highly configurable, theme based design, css based animations.
-
-It is parcially based off of the Collapsing Categories Plugin by Robert Felty.
+This is your Animated menu plugin that uses Mootools 1.4.5 javascript to form a multi-level collapsable menu widget in your sidebar for your categories and posts. Automatic opener upon page change. Highly configurable, theme based design, css based animations.
 
 
 == Installation ==
@@ -20,7 +18,7 @@ It is parcially based off of the Collapsing Categories Plugin by Robert Felty.
  - Unpackage contents to wp-content/plugins/ so that the files are in a superslider-menu directory. 
  - Activate the plugin, 
  - Configure plugin under > settings > SuperSlider-menu
- - Go to Design > Widgets , and drag over the superslider-menu Widget, configure widget.
+ - Go to Appearance > Widgets , and drag over the superslider-menu Widget, configure widget.
  - (optional) move plugin sub folder plugin-data to your wp-content folder,
 	under  > settings > SuperSlider-menu > option group, File Storage - Loading Options
 	select "Load css from plugin-data folder, see side note. (Recommended)".
@@ -90,7 +88,7 @@ Create your own graphic and animation theme based on one of these provided
 
 == Report Bugs Request / Options / Functions ==
 
-* Please use the forum system at http://support.wp-superslider.com
+* Please use the forum system at http://wordpress.org/extend/plugins/superslider-menu/
 	
 
 == Frequently Asked Questions ==
@@ -127,14 +125,14 @@ http://yourblogaddress/wp-content/plugins/superslider-menu/plugin-data/superslid
 
 = I can't get including or excluding to work = 
 
-Make sure you specify category names, not ids.
+Make sure you specify category names, or ids.
 
 
 == Demo ==
 
 This plugin is in use here at 
 	
-	* <http://wp-superslider.com>
+	* <http://superslider.daivmowbray.com>
 	* <http://portfolio.daivmowbray.com>
 
 == CAVEAT ==
@@ -144,6 +142,12 @@ If a user's browser doesn't support javascript the list of cats and posts will d
 
 == HISTORY ==
 
+* 2.3 (2012/10/10)
+
+    * upgraded for mootools 1.4.5
+    * upgraded for WordPress 3.4+
+	
+    
 * 2.1 (2010/06/02)
 
     * fixed link to settings page

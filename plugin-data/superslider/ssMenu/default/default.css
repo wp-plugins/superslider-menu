@@ -9,8 +9,29 @@
 .ss_menu{
     position: relative;
 }
-
-	
+.ss_menu:after {
+	border-color: #527ECF #CECECE #CECECE;
+    border-style: solid;
+    border-width: 2px 1px 1px;
+    bottom: -26px;
+    content: "";
+    height: 25px;
+    left: 0;
+    position: absolute;
+    width: 99%;
+	-moz-border-radius: 0 0px 6px 6px;
+	-webkit-border-radius: 0 0px 6px 6px;
+	border-radius: 0 0px 6px 6px;
+}
+.ss_menu h2, .ss_menu:after{
+background: rgb(142,195,238);
+background: -moz-linear-gradient(top,  rgba(142,195,238,1) 1%, rgba(79,139,188,1) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(142,195,238,1)), color-stop(100%,rgba(79,139,188,1)));
+background: -webkit-linear-gradient(top,  rgba(142,195,238,1) 1%,rgba(79,139,188,1) 100%);
+background: -o-linear-gradient(top,  rgba(142,195,238,1) 1%,rgba(79,139,188,1) 100%);
+background: -ms-linear-gradient(top,  rgba(142,195,238,1) 1%,rgba(79,139,188,1) 100%);
+background: linear-gradient(to bottom,  rgba(142,195,238,1) 1%,rgba(79,139,188,1) 100%);
+}
 .ssMenuList{
 	margin: 0px;
 	padding-right: 0px;
@@ -134,34 +155,3 @@ span.active_nav
 span.ssMore.active_nav {
     display:none;
 }
-
-/* tootip classes */
-.tooltip{}
-.tip-top {
-	width: 280px;
-	height: 20px;
-	background:transparent url('tooltips/tip-sprite.png') no-repeat scroll -281px 0px;
-    }
-.tip-bottom {
-	width: 280px;
-	height: 20px;
-	background:transparent url('tooltips/tip-sprite.png') no-repeat scroll -562px 0px;
-    }
-.tip {
-    background:transparent url('tooltips/tip-sprite.png') repeat-y scroll 0px 0px;
-    color: #d1e1f6;
-	width: 280px;
-    }
-.tip-title, .tip-text {
-	font-size: 12px;
-	padding: 2px 30px 3px 10px;
-	text-align: center;
-    }
-.tip-title {
-	font-weight: bold;
-	color: #5091c9;
-	padding-bottom: 6px;
-    }
-.tip-text { 
-    font-style: italic; 
-    }

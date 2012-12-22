@@ -1,32 +1,27 @@
-function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opacity,trans_time,trans_type,follow,fspeed){
+function superslidermenu(menuid, holder,toggler,content,toglink,add_mouse,alwaysHide,opacity,trans_time,trans_type,follow,fspeed){
 	
 	//  IE6
 	if(window.ie6) var heightValue ='100%';
 	else var heightValue = '';
 
 	var togglerName =  toggler;
-	var contentName =  content;
-	
+	var contentName =  content;	
 	var counter = 1;	
 	var toggler = $$(togglerName+counter);
-	var content = $$(contentName+counter);
-	
+	var content = $$(contentName+counter);	
 	var catName = toglink;
-	var togCat = $$(holder+catName);
-	
-//	console.log('the holder is ' + holder +' .');
-//	console.log('the catName is ' + catName +' .');
-	
+	var togCat = $$(holder+catName);	
+	var navArrow = 'navArrow' + menuid;
+
 	while(toggler.length>0) {
 
     // cookie opener start
-    function autoOpen( myCount ) {		
+    function autoOpen( myCount ) {
+//console.log('myCount ' + myCount +' .');
 		toggler.each(function(el, i) { 
 				el.addEvent('click', function() {
 					Cookie.write(('menuOpen'+myCount), i);
-					//console.log('the menuOpen clicked is ' + Cookie.read(('menuOpen'+myCount)) +' .');
-					//console.log('the myCount is ' + myCount +' .');
-					//console.log('the i is ' + i +' .');
+
 				});	
 			});
 			
@@ -37,7 +32,7 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 			});
 		if (Cookie.read('menuOpen'+myCount)) { 
 				var menuOpened = Cookie.read(('menuOpen'+myCount)).toInt();
-				
+			
 			}else { 
 				menuOpened = -1;
 			}
@@ -56,10 +51,9 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 			autoOpen(mycounter);
 		}else{
 			menuOpenAt = -1;
-		}		
-//new cookie opener stop
+		}
 
-		new Accordion(toggler, content, {
+		new Fx.Accordion(toggler, content, {
 			opacity: opacity,			//- (boolean: defaults to true) If set to true, an opacity transition effect will take place when switching between displayed elements.
 			display: menuOpenAt,		//- (integer: defaults to 0) The index of the element to show at start (with a transition).
 			alwaysHide: alwaysHide,		//- (boolean: defaults to false) If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
@@ -74,7 +68,6 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 				if(element && element.offsetHeight>0) element.setStyle('height', heightValue);					
 			},			
 			onActive: function(toggler, content) {
-
 				toggler.addClass('open');				
 				var tomorph = toggler.parentNode;
 				var togglerMorph = new Fx.Morph(tomorph, {duration: 1100, transition: Fx.Transitions.Sine.easeOut});
@@ -83,8 +76,7 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 				toggler.getParent().getParent().getParent().setStyle('height', heightValue);
 							
 			},
-			onBackground: function(toggler, content) {
-				
+			onBackground: function(toggler, content) {				
 				toggler.removeClass('open');
 				var tomorph = toggler.parentNode;
 				var togglerMorph = new Fx.Morph(tomorph, {duration: 400, transition: Fx.Transitions.Sine.easeOut});
@@ -99,18 +91,16 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 		toggler=$$(togglerName+counter);
 		content=$$(contentName+counter);		
 	};
-	
-	// this removes the pound sign from the holder id
-	var mhc = holder.replace('#',''); 
-
+		
+	var mhc = holder.replace('#',''); // this removes the pound sign from the holder id
 	clear_link(mhc);// this identifies the active page
 	
 	//this is the nav arrow follow creator
 	if (follow == 'on'){		
-		make_arrow(holder, mhc,fspeed);
+		make_arrow(navArrow, holder, mhc,fspeed);
 		};
 	
-} // end superslider function
+//} // end superslider function
 
 	/*
 	*	 identify active page remove link and add id
@@ -128,7 +118,7 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 				}				
 			if (unlinked == 0){
 				var newHit = a[0];
-				newHit.parentNode.setProperty ('id','active_nav'); 
+				newHit.parentNode.addClass ('active_nav'); 
 			}
 	}
 	function removeNode(n){
@@ -136,33 +126,32 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 			for(var i=0;i<n.childNodes.length;i++)
 		
 		n.parentNode.insertBefore(n.childNodes[i].cloneNode(true),n);
-		n.parentNode.setProperty('id','active_nav');
+		n.parentNode.addClass('active_nav');
 		n.parentNode.removeChild(n);
 	}
 
-	/*
-	*	this creates the nav arrow
-	*/	
-	function make_arrow(holder,mhc,fspeed){
-			
+	function make_arrow(navArrow,holder,mhc,fspeed){
+		
 			var arrowHome = $(mhc);
 			var myArrow = new Element('div', {
-				'id': 'navArrow',
+				'id': navArrow,
 				styles:{'top': '0',
 						'height':'100%',
-						'z-index': '1005',
+						'z-index': '100',
 						'overflow': 'hidden',
 						'position': 'absolute'},
 				'class': 'myNavArrow'
 				}).inject(arrowHome);
 				
-			followme(holder,fspeed);
+			followme(navArrow,holder,fspeed);
 	}
 	
-	function followme(holder,fspeed){
+	function followme(navArrow,holder,fspeed){
+
+	var navArrow = $(navArrow);
 				var destination = holder+' span' +', '+ holder+' div';	
 				navArrowFollow(
-				'navArrow',				// ID of arrow wrap
+				navArrow,				// ID of arrow wrap
 				destination,			// Array selector for arrow destinations
 				'active_nav',			// ID of current nav element
 				0,						//  Background position x of background image
@@ -170,3 +159,4 @@ function superslidermenu(holder,toggler,content,toglink,add_mouse,alwaysHide,opa
 				fspeed					//  speed of movment
 				);		
 	} 
+} // end superslider function

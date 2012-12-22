@@ -3,9 +3,7 @@
 	z-index: 3000;
 	border: 1px solid #c0c0c0;
 	background-color: #eff5fd;
-	padding: 15px;
-	
-	opacity: 0.85;
+	padding: 15px;	
 }
 
 #tooltip h3 { margin: 0px 0px 10px 20px; padding: 0px;}
